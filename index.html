@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Violación de Orden en Mozilla Firefox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #2d1b69;
+            --primary-light: #7928ca;
+            --accent: #ff0080;
+            --success: #13ce66;
+            --error: #ff4949;
+            --text: #ffffff;
+            --secondary-text: #e2e2e2;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a0b2e 100%);
+            color: var(--text);
+            margin: 0;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(45, 27, 105, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 800px;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--accent);
+            font-size: 1.8em;
+            margin-top: 0;
+            text-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+        }
+
+        .description {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .thread-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .thread {
+            background: rgba(121, 40, 202, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            width: 150px;
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+            font-size: 1.2em;
+            color: var(--accent);
+            box-shadow: 0 4px 15px rgba(121, 40, 202, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .thread:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(121, 40, 202, 0.4);
+        }
+
+        .thread i {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+
+        .thread::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1));
+            pointer-events: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: var(--secondary-text);
+            height: 50px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background: linear-gradient(45deg, var(--accent), var(--primary-light));
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 0, 128, 0.3);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover:not(:disabled) {
+            background: linear-gradient(45deg, #ff1a8c, #8a3dd9);
+            box-shadow: 0 6px 20px rgba(255, 0, 128, 0.4);
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .animate {
+            animation: floatBounce 2s infinite;
+        }
+
+        @keyframes floatBounce {
+            0%, 100% { 
+                transform: translateY(0) scale(1);
+                box-shadow: 0 4px 15px rgba(121, 40, 202, 0.3);
+            }
+            50% { 
+                transform: translateY(-15px) scale(1.05);
+                box-shadow: 0 15px 25px rgba(121, 40, 202, 0.4);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .thread-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .thread {
+                width: 120px;
+                height: 120px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+        }
+
+        .thread.success {
+            background: rgba(19, 206, 102, 0.2);
+            border: 1px solid var(--success);
+        }
+
+        .thread.error {
+            background: rgba(255, 73, 73, 0.2);
+            border: 1px solid var(--error);
+        }
+
+        .thread::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-exclamation-triangle"></i> Problema de Violación de Orden en Mozilla Firefox</h1>
+        <p class="description">
+            En este ejemplo, el Hilo 1 debe iniciar primero para inicializar una variable. Si el Hilo 2 intenta acceder antes de tiempo, causará un error. ¡Usaremos semáforos para evitarlo!
+        </p>
+
+        <div class="thread-container">
+            <div id="thread1" class="thread">
+                <i class="fas fa-cog"></i>
+                <div>Hilo 1</div>
+            </div>
+            <div id="thread2" class="thread">
+                <i class="fas fa-code"></i>
+                <div>Hilo 2</div>
+            </div>
+        </div>
+
+        <div class="status" id="status">
+            <i class="fas fa-info-circle"></i> 
+            Estado: Esperando iniciar Hilo 1...
+        </div>
+        
+        <button id="start" onclick="startSequence()">
+            <i class="fas fa-play"></i> Iniciar Secuencia
+        </button>
+        <button id="reset" onclick="resetSimulation()">
+            <i class="fas fa-redo"></i> Reiniciar
+        </button>
+    </div>
+
+    <script>
+        let thread1Initialized = false;
+
+        function startSequence() {
+            document.getElementById("start").disabled = true;
+            document.getElementById("status").innerHTML = '<i class="fas fa-spinner fa-spin"></i> Estado: Iniciando Hilo 1...';
+            document.getElementById("thread1").classList.add("animate");
+
+            setTimeout(() => {
+                thread1Initialized = true;
+                document.getElementById("thread1").classList.remove("animate");
+                document.getElementById("thread1").classList.add("success");
+                document.getElementById("status").innerHTML = '<i class="fas fa-check-circle"></i> Estado: Hilo 1 inicializado. ¡Hilo 2 puede iniciar!';
+                
+                document.getElementById("thread2").classList.add("animate");
+                setTimeout(startThread2, 1000);
+            }, 1000);
+        }
+
+        function startThread2() {
+            if (thread1Initialized) {
+                document.getElementById("thread2").classList.remove("animate");
+                document.getElementById("thread2").classList.add("success");
+                document.getElementById("status").innerHTML = '<i class="fas fa-check-double"></i> Estado: Hilo 2 accedió a mThread de manera segura.';
+            } else {
+                document.getElementById("thread2").classList.add("error");
+                document.getElementById("status").innerHTML = '<i class="fas fa-times-circle"></i> Error: Hilo 2 intentó acceder a mThread antes de la inicialización.';
+            }
+        }
+
+        function resetSimulation() {
+            thread1Initialized = false;
+            document.getElementById("start").disabled = false;
+            document.getElementById("thread1").classList.remove("success", "error", "animate");
+            document.getElementById("thread2").classList.remove("success", "error", "animate");
+            document.getElementById("status").innerHTML = '<i class="fas fa-info-circle"></i> Estado: Esperando iniciar Hilo 1...';
+        }
+    </script>
+</body>
+</html>
